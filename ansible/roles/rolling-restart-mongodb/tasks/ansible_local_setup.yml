@@ -1,0 +1,44 @@
+---
+- name: Create fact directory
+  file:
+    path: /etc/ansible/facts.d/
+    state: directory
+
+- name: Create a dynamic custom fact mongodb_member_status
+  copy:
+    dest: /etc/ansible/facts.d/mongodb_status.fact
+    mode: 0775
+    content: |
+      #!/usr/bin/python3
+
+      import json
+      import pymongo
+
+      def mongodb_connect(client_uri):
+          try:
+              return pymongo.MongoClient(client_uri)
+          except pymongo.errors.ConnectionFailure:
+              print("Failed to connect to server {}").format(client_uri)
+
+      def render_data(data):
+          return json.dumps(data)
+
+      # Return false instead of null
+      def is_hidden():
+          return False if client.admin.command('ismaster').get('hidden') is None else True
+
+      client = mongodb_connect('mongodb://localhost:27017/')
+
+      json_data = {}
+      json_data["is_master"]     = client.admin.command('ismaster').get('ismaster')
+      json_data["is_secondary"]  = client.admin.command('ismaster').get('secondary')
+      json_data["is_hidden"]     = is_hidden()
+
+      print(render_data(json_data))
+
+- name: Setting host facts
+  set_fact:
+    restarted_yet: false
+
+- name: Gathering Facts
+  setup:

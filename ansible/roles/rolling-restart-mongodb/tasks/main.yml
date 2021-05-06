@@ -1,3 +1,9 @@
 ---
+# Setup ansible_local facts
+- include_tasks: ansible_local_setup.yml
+
 - debug:
-    msg: "{{ ansible_local }}"
+    msg: "{{ ansible_local['mongodb_status'] }}"
+
+- debug:
+    msg: "{{ restarted_yet }}"
