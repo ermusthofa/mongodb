@@ -1,0 +1,13 @@
+---
+- name: Install common package
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ common_package_dependencies }}"
+
+- name: Install python package dependencies
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    state: present
+    executable: pip3
+  loop: "{{ common_pip_dependencies }}"

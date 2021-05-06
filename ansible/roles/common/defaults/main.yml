@@ -1,0 +1,3 @@
+---
+common_package_dependencies: ["python3-pip"]
+common_pip_dependencies: ["pymongo"]
