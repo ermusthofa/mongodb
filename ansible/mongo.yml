@@ -1,6 +1,7 @@
 - name: rolling restart mongodb
   hosts: mongo
   remote_user: root
+  any_errors_fatal: true
 
   roles:
   - common

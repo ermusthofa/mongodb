@@ -1,0 +1,15 @@
+---
+- name: mongodb restart service
+  ansible.builtin.service:
+    name: mongod
+    state: restarted
+
+- name: wait service to be ready
+  ansible.builtin.shell: mongo --eval "db.version()"
+  retries: 5
+  until: mongodb_restarted_service is not failed
+  register: mongodb_restarted_service
+
+- name: Setting host facts
+  set_fact:
+    restarted_yet: true

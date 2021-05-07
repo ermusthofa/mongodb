@@ -2,8 +2,16 @@
 # Setup ansible_local facts
 - include_tasks: ansible_local_setup.yml
 
-- debug:
-    msg: "{{ ansible_local['mongodb_status'] }}"
+# Restart Hidden
+- name: mongodb restart hidden replicas
+  include_tasks: mongodb_restart_hidden_and_secondary.yml
+  when: ansible_local['mongodb_status']['is_hidden'] and not restarted_yet
 
-- debug:
-    msg: "{{ restarted_yet }}"
+# Restart Secondary
+- name: mongodb restart secondary replicas
+  include_tasks: mongodb_restart_hidden_and_secondary.yml
+  when: ansible_local['mongodb_status']['is_secondary'] and not restarted_yet
+
+# Restart Primary
+- include_tasks: mongodb_restart_primary.yml
+  when: ansible_local['mongodb_status']['is_master'] and not restarted_yet

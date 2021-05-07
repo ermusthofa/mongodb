@@ -1,0 +1,8 @@
+---
+- name: mongodb restart primary
+  ansible.builtin.shell: echo processing && sleep 5
+  throttle: 1
+
+- name: Setting host facts
+  set_fact:
+    restarted_yet: true
