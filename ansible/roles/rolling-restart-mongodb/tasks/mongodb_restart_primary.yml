@@ -1,8 +1,10 @@
 ---
-- name: mongodb restart primary
-  ansible.builtin.shell: echo processing && sleep 5
-  throttle: 1
+- name: mongodb delegate primary replicas
+  ansible.builtin.shell: /opt/mongodb/mongodb_primary_delegator.py
 
-- name: Setting host facts
-  set_fact:
-    restarted_yet: true
+- name: give the replicas time to sync with each other
+  pause:
+    seconds: 10
+
+- name: mongodb restart ex-primary replicas
+  include_tasks: mongodb_restart_service.yml

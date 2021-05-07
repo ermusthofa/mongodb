@@ -11,5 +11,5 @@
   register: mongodb_restarted_service
 
 - name: Setting host facts
-  set_fact:
+  ansible.builtin.set_fact:
     restarted_yet: true

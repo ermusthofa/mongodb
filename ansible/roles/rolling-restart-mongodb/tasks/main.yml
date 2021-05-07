@@ -2,16 +2,33 @@
 # Setup ansible_local facts
 - include_tasks: ansible_local_setup.yml
 
+- name: ensure /opt/mongodb directory exist
+  ansible.builtin.file:
+    path: /opt/mongodb
+    owner: root
+    group: root
+    mode: "0644"
+    state: directory
+
+- name: copy mongodb_primary_delegator.py
+  ansible.builtin.copy:
+    src: mongodb_primary_delegator.py
+    dest: "/opt/mongodb/mongodb_primary_delegator.py"
+    owner: root
+    group: root
+    mode: "0700"
+
 # Restart Hidden
 - name: mongodb restart hidden replicas
-  include_tasks: mongodb_restart_hidden_and_secondary.yml
+  include_tasks: mongodb_restart_service.yml
   when: ansible_local['mongodb_status']['is_hidden'] and not restarted_yet
 
 # Restart Secondary
 - name: mongodb restart secondary replicas
-  include_tasks: mongodb_restart_hidden_and_secondary.yml
+  include_tasks: mongodb_restart_service.yml
   when: ansible_local['mongodb_status']['is_secondary'] and not restarted_yet
 
 # Restart Primary
-- include_tasks: mongodb_restart_primary.yml
+- name: mongodb restart primary replicas
+  include_tasks: mongodb_restart_primary.yml
   when: ansible_local['mongodb_status']['is_master'] and not restarted_yet
