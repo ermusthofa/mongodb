@@ -66,8 +66,6 @@ def main():
         for s_val in shuffled_members_object:
             if m_val['_id'] == s_val['id']:
                 mongodb_conf['config']['members'][i]['priority'] = s_val['priority']
-                # print("mongodb_conf['config']['members'][{}]['id = {}'] = s_val[{}]".format(i, mongodb_conf['config']['members'][i]['_id'], s_val['priority']))
-                # print("{} {}".format(mongodb_conf['config']['members'][i]['host'], mongodb_conf['config']['members'][i]['priority']))
     
     mongodb_conf['config']['version'] += 1
     mongodb_conf['config']['term'] += 1
